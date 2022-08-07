@@ -3,12 +3,16 @@ const User=require("./../models/userModel")
 const verifyToken=require("./verificationToken")
 const router=express.Router()
 
-router.patch("/:id",verifyToken.verifyTokenAndAuthorization,async(req,res)=>{
+router.put("/:id",verifyToken.verifyTokenAndAuthorization,async(req,res)=>{
    try{
     const updatedUser=await User.findByIdAndUpdate(req.params.id,req.body,{
     new: true, //this will return updated document
     runValidators: true,
   })
+  if(!updatedUser)
+  {
+    res.status(404).json("Bad Request")
+  }
   res.status(201).json(updatedUser)
 }
 catch(err){
